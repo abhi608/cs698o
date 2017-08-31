@@ -1,1 +1,5 @@
 src/.ipynb_checkpoints/*
+
+# datasets
+custom_dataset/
+cifar_dataset/
