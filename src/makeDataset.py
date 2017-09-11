@@ -34,6 +34,7 @@ for dir in folders:
 	print dir
 	raw_image = '../datasets/'+dir+'/VOC2007/JPEGImages/'
 	anno_image = '../datasets/'+dir+'/VOC2007/Annotations/'
+	train_dataset = '../datasets/train_final/'
 	for anno_filename in os.listdir(anno_image):
 		tree = 	ET.parse(anno_image+anno_filename)
 		tmp = anno_filename.split('.')
@@ -42,7 +43,7 @@ for dir in folders:
 		img = cv2.imread(raw_image+img_filename)
 		root = tree.getroot()
 		print root
-		for object in root.findall('object'):
+		for i,object in enumerate(root.findall('object')):
 			class1 = str(object.find('name').text)
 			bndbox = object.find('bndbox')
 			print class1, bndbox[0].text, bndbox[1].text, bndbox[2].text, bndbox[3].text
@@ -53,9 +54,10 @@ for dir in folders:
 			ymax = int(bndbox[3].text)
 			crop_img = img[ymin:ymax, xmin:xmax]
 			if dir == 'train':
+				cv2.imwrite(train_dataset+class1+'/'+tmp[0]+'_'+str(i)+'.jpg', crop_img)
 				train_classes[class1].append(crop_img)
-			else:
-				test_classes[class1].append(crop_img)
+			# else:
+			# 	test_classes[class1].append(crop_img)
 		# break
 
 print train_classes, test_classes
