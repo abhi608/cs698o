@@ -10,19 +10,24 @@ from collections import namedtuple
 Rectangle = namedtuple('Rectangle', 'xmin ymin xmax ymax')
 
 def random_bbox(bbox):
-    x1 = randint(bbox[0], bbox[2])
-    x2 = randint(bbox[0], bbox[2])
-    while x2 == x1:
-    	x2 = randint(bbox[0], bbox[2])
-    y1 = randint(bbox[1], bbox[3])
-    y2 = randint(bbox[1], bbox[3])
-    while y2 == y1:
-    	y2 = randint(bbox[1], bbox[3])
-    left = min(x1, x2)
-    right = max(x1, x2)
-    upper = min(y1, y2)
-    lower = max(y1, y2)
-    return [left, upper, right, lower]
+	left = 0
+	right = 0
+	upper = 0
+	lower = 0
+	while right-left < 50 or lower-upper < 50:
+		x1 = randint(bbox[0], bbox[2])
+		x2 = randint(bbox[0], bbox[2])
+		while x2 == x1:
+			x2 = randint(bbox[0], bbox[2])
+		y1 = randint(bbox[1], bbox[3])
+		y2 = randint(bbox[1], bbox[3])
+		while y2 == y1:
+			y2 = randint(bbox[1], bbox[3])
+		left = min(x1, x2)
+		right = max(x1, x2)
+		upper = min(y1, y2)
+		lower = max(y1, y2)
+	return [left, upper, right, lower]
 
 def area_intersection(a, b):  # returns None if rectangles don't intersect
     dx = min(a.xmax, b.xmax) - max(a.xmin, b.xmin)
@@ -64,7 +69,7 @@ for dir in folders:
 			intersect_area = area_intersection(rect_random, rect_class)
 			if intersect_area == None:
 				intersect_area = 0
-			total_area = area(rect_random) + area(rect_class)
+			total_area = area(rect_random) + area(rect_class) - intersect_area
 			tmp_arr.append(intersect_area/total_area)
 		background.append((random_tile, max(tmp_arr)))
 	break
